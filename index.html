@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 اگست کارڈ</title>
+<style>
+body {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  background: linear-gradient(#006600, #ffffff);
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  color: #fff;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+.card {
+  background: #fff;
+  color: #000;
+  border: 5px solid #006600;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 20px;
+}
+h1 {
+  color: #ffcc00;
+  text-shadow: 2px 2px #006600;
+}
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: none;
+}
+button {
+  padding: 10px 15px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn {
+  background: #006600;
+  color: white;
+}
+.btn.alt {
+  background: #ffcc00;
+  color: black;
+}
+#confetti span {
+  position: fixed;
+  animation: fall linear forwards;
+  font-size: 20px;
+}
+@keyframes fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🇵🇰 جشنِ آزادی مبارک 🇵🇰</h1>
+  <p id="today"></p>
+  
+  <input type="text" id="name" placeholder="اپنا نام لکھیں">
+  <textarea id="msg" placeholder="مبارکباد کا پیغام لکھیں"></textarea>
+  
+  <div>
+    <button class="btn" id="makeCard">کارڈ بنائیں</button>
+    <button class="btn alt" id="printCard">پرنٹ / PDF</button>
+    <button class="btn" id="downloadCard">ڈاؤنلوڈ</button>
+  </div>
+  
+  <div id="printArea" class="card">
+    <h2>جشنِ آزادی مبارک</h2>
+    <p id="cardMsg"></p>
+    <p id="cardName"></p>
+    <p id="cardDate"></p>
+  </div>
+  
+</div>
+
+<div id="confetti"></div>
+
+<!-- HTML2Canvas Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+function two(n){return String(n).padStart(2,'0')}
+function updateDate(){
+  const d=new Date();
+  const months=['جنوری','فروری','مارچ','اپریل','مئی','جون','جولائی','اگست','ستمبر','اکتوبر','نومبر','دسمبر'];
+  const today = `${two(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  document.getElementById('today').textContent=today;
+  document.getElementById('cardDate').textContent=today;
+}
+updateDate();
+
+function launchConfetti(){
+  const icons = ["🎉","✨","💚","🇵🇰","⭐","🎊"];
+  for(let i=0;i<40;i++){
+    const span=document.createElement('span');
+    span.textContent=icons[Math.floor(Math.random()*icons.length)];
+    span.style.left=Math.random()*100+'vw';
+    span.style.animationDuration = (Math.random()*1.5 + 2.5).toFixed(2)+'s';
+    document.getElementById('confetti').appendChild(span);
+    setTimeout(()=>span.remove(), 3000);
+  }
+}
+
+document.getElementById('makeCard').addEventListener('click', ()=>{
+  const name = (document.getElementById('name').value || 'پاکستانی شہری').trim();
+  const msg  = document.getElementById('msg').value;
+  document.getElementById('cardName').textContent = '— ' + name;
+  document.getElementById('cardMsg').textContent  = msg;
+  launchConfetti();
+});
+
+document.getElementById('downloadCard').addEventListener('click', ()=>{
+  html2canvas(document.getElementById('printArea')).then(canvas=>{
+    let link=document.createElement('a');
+    link.download='Pakistan_Independence_Card.png';
+    link.href=canvas.toDataURL();
+    link.click();
+  });
+});
+
+document.getElementById('printCard').addEventListener('click', ()=>window.print());
+</script>
+
+</body>
+</html>
